@@ -1,0 +1,22 @@
+# -------- core --------
+#python>=3.9,<3.12
+
+numpy>=1.23,<2.0
+scipy>=1.9,<1.13
+
+# -------- deep learning --------
+torch>=2.0,<2.3
+torchvision>=0.15,<0.18
+
+# -------- materials & structure --------
+jarvis-tools>=2022.9.16
+
+# -------- utilities --------
+tqdm>=4.64
+requests>=2.28
+
+# -------- visualization --------
+matplotlib>=3.6,<3.9
+
+# -------- optional but recommended --------
+pyyaml>=6.0

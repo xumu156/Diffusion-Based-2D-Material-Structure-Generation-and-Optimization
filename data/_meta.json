@@ -1,0 +1,9 @@
+{
+  "source": "jarvis-tools (robust downloader)",
+  "dataset": "dft_2d_2021",
+  "exported": 1079,
+  "skipped": 0,
+  "max_atoms": 64,
+  "cache_zip": "D:\\code\\晶体\\data\\_jarvis_cache\\d2-3-12-2021.json.zip",
+  "note": "deltaG_H is often missing in structure databases and may be placeholder (0.0) here."
+}
