@@ -49,7 +49,7 @@ project/
 ```
 
 ## 三、模型结构与模块说明
-### 3.1 条件扩散模型（DDPM）
+### 1 条件扩散模型（DDPM）
 
 本项目采用基于 DDPM 的连续坐标扩散模型，对二维材料的原子分数坐标进行逐步去噪生成。
 
@@ -57,7 +57,7 @@ project/
 - 反向过程：学习去噪网络，预测噪声或残差坐标
 - 条件信息：原子类型 z、晶格 lattice、原子 mask
 
-### 3.2 材料结构生成器（Structure Generator）
+### 2 材料结构生成器（Structure Generator）
 
 扩散采样模块封装于 `structure_generator.py` 中，负责：
 
@@ -68,7 +68,7 @@ project/
 
 该模块输出满足几何约束的候选二维材料原子结构。
 
-### 3.3 性能引导优化模块
+### 3 性能引导优化模块
 
 为了提升生成材料在 HER 催化任务中的性能，本项目引入基于梯度的引导优化模块。
 
@@ -99,7 +99,7 @@ L = w₁|ΔG_H - ΔG_target|
 ---
 
 ## 五、复现方式
-### 环境配置
+### 1. 环境配置
 ```bash
 conda create -n material_2d python=3.9
 pip install -r requirements.txt
@@ -114,9 +114,9 @@ python test.py --ckpt checkpoints/model.pt
 ```
 ---
 
-## 6. 实验参数设置
+## 六. 实验参数设置
 
-### 6.1 数据与输入格式
+### 1 数据与输入格式
 - 数据格式：`.json`
 - 每个结构包含：
   - `atomic_numbers`
@@ -128,7 +128,7 @@ python test.py --ckpt checkpoints/model.pt
 **来源文件：**
 - `dataset/material_dataset.py`
 
-### 6.2 扩散模型参数
+### 2 扩散模型参数
 - 扩散步数：`T = 200`
 - 扩散模型权重文件：`kpt_diffusion.pt`
 - 是否施加 2D 约束：是（z 方向压缩）
@@ -138,7 +138,7 @@ python test.py --ckpt checkpoints/model.pt
 - `models/structure_generator.py`
 - `utils/geo_utils.py (enforce_2d_constraints)`
 
-### 6.3 性质预测模型参数
+### 3 性质预测模型参数
 - 输出性质维度：3  
   - ΔG_H
   - thermo_stability
@@ -149,7 +149,7 @@ python test.py --ckpt checkpoints/model.pt
 - `test.py`
 - `models/diffusion_model.py`
 
-### 6.4 引导优化目标
+### 4 引导优化目标
 优化目标函数由以下项加权组成：
 
 L =  
@@ -182,9 +182,9 @@ w₁ · |ΔG_H − ΔG_target|
 
 ---
 
-## 7. 实验评价指标
+## 七. 实验评价指标
 
-### 7.1 预测性能指标
+### 1 预测性能指标
 - 预测 ΔG_H 分布（直方图）
 - 预测热稳定性 vs 合成性散点图
 
@@ -192,7 +192,7 @@ w₁ · |ΔG_H − ΔG_target|
 - `utils/vis.py`
 - `test.py (evaluate_and_save)`
 
-### 7.2 结构合理性指标
+### 2 结构合理性指标
 - 最小原子间距约束
 - 2D 厚度约束
 - 原子坐标平滑性
@@ -200,7 +200,7 @@ w₁ · |ΔG_H − ΔG_target|
 **来源文件：**
 - `utils/geo_utils.py`
 
-### 7.3 综合评分与排序
+### 3 综合评分与排序
 - 使用性质预测结果计算综合 score
 - 按 score 从高到低排序
 - 输出 Top 候选结构
@@ -214,9 +214,9 @@ w₁ · |ΔG_H − ΔG_target|
 
 ---
 
-## 8. 实验输出结果
+## 八. 实验输出结果
 
-### 8.1 生成结构结果
+### 1 生成结构结果
 - 多个生成结构统一写入：
   - `top_candidates.json`
 - 每个条目包含：
@@ -231,7 +231,7 @@ w₁ · |ΔG_H − ΔG_target|
 - `test.py`
 
 
-### 8.2 可视化结果
+### 2 可视化结果
 - `her_performance.png`（ΔG_H 分布）
 - `stability_curve.png`（稳定性 vs 合成性）
 - `generated_structures.png`（2D 超胞投影）
@@ -242,7 +242,7 @@ w₁ · |ΔG_H − ΔG_target|
 
 ---
 
-## 9. 结构文件格式说明
+## 九. 结构文件格式说明
 
 - 当前生成结果为 `.json` 格式
 - `.json` 可直接转换为 `.cif` 用于材料模拟与可视化
@@ -266,15 +266,15 @@ w₁ · |ΔG_H − ΔG_target|
 
 整体网络由三部分组成：
 
-1. **性质预测网络（Property Predictor）**
+2.1. **性质预测网络（Property Predictor）**
    - 输入：原子类型 + 原子坐标 + 邻接图
    - 输出：ΔG_H、热稳定性、可合成性
 
-2. **扩散去噪网络（Diffusion Denoiser）**
+2.2. **扩散去噪网络（Diffusion Denoiser）**
    - 逐步去噪原子坐标
    - 条件输入为时间步 t 与结构嵌入
 
-3. **结构生成与优化模块**
+2.3. **结构生成与优化模块**
    - 在采样阶段引入目标函数进行引导
    - 强制二维几何约束
 
